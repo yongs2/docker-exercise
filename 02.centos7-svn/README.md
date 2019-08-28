@@ -15,9 +15,9 @@ Error: libselinux conflicts with fakesystemd-1-17.el7.centos.noarch
 
 - 이에 대해 구글링 결과 다음의 해결책을 찾음 : [Fixing CentOS 7 systemd conflicts with docker](https://blog.centos.org/2015/12/fixing-centos-7-systemd-conflicts-with-docker/)
 
-svn co --username ${USERNAME} --password ${PASSWORD} http://j-din.iptime.org/scm/svn/KT/116/trunk
-
 - 프로젝트 소스를 빌드하기 위해서는 다음 패키지들이 추가적으로 필요
+
+```sh
 yum install -y openssl-devel net-snmp-devel libaio
 
 echo "https://qiita.com/tkprof/items/2a4eb868f45fb5759110"
@@ -57,10 +57,11 @@ cd trunk;
 rm -Rf src/lib/oam/src/cpm_db;
 rm -Rf src/lib/oam/src/libAlti;
 make -f build/Makefile
+```
 
 - 프로젝트를 빌드하기 위한 pipeline script 작성
 
-```script
+```groovy
 podTemplate(
     containers: [
         containerTemplate(name: 'builder', image: '192.168.0.210:5000/centos7-svn:1.0.0', ttyEnabled: true, command: 'cat'),
