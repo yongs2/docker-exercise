@@ -11,7 +11,7 @@ RUN yum -y install tar unzip vi vim
 RUN yum -y install apr apr-util apr-devel apr-util-devel
 RUN yum -y install net-tools curl openssl elinks locate python-setuptools
 RUN yum -y install subversion
-RUN yum -y install gcc-c++
+RUN yum -y install gcc-c++ libaio
 RUN yum clean all
 
 CMD ["/bin/bash"]
