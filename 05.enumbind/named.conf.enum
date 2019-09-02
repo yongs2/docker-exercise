@@ -1,0 +1,4 @@
+zone "e164.arpa" {
+type master;
+file "/etc/bind/db.e164.arpa";
+};
