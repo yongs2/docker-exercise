@@ -1,0 +1,24 @@
+$TTL 1h
+@ IN SOA e164.arpa ngv-admin@example.com (
+                                                        2009010910 ;serial
+                                                        3600 ;refresh
+                                                        3600 ;retry
+                                                        3600 ;expire
+                                                        3600 ;minimum TTL
+)
+@ IN NS e164.arpa.
+@ IN A 172.17.0.3
+
+; Demo system number 2125550270
+0.7.2.0.5.5.5.2.1.2 IN NAPTR 1 1 "u" "E2U+sip" "!(^.*$)!sip:\\1@10.147.226.2!" .
+
+; Demo system number +12125550270
+0.7.2.0.5.5.5.2.1.2.1 IN NAPTR 1 1 "u" "E2U+sip" "!(^.*$)!sip:\\1@10.147.226.2!" .
+
+; Clearwater external numbers 2125550271-9
+*.7.2.0.5.5.5.2.1.2 IN NAPTR 1 1 "u" "E2U+sip" "!(^.*$)!sip:+1\\1@ngv.example.com!" .
+
+0.9.8.7.6.5.4.3.2.1.e164.arpa. NAPTR 10 100 "u" "E2U+sip" "!^.*$!sip:info@example.com!".
+0.9.8.7.6.5.4.3.2.1.e164.arpa. NAPTR 10 101 "u" "E2U+h323" "!^.*$!h323:info@example.com!".
+0.9.8.7.6.5.4.3.2.1.e164.arpa. NAPTR 10 102 "u" "E2U+msg" "!^.*$!mailto:info@example.com!".
+8.1.2.7.5.9.3.3.1.6.1.e164.arpa. NAPTR 100 10 "U" "SIP+E2U" "!^.*$!sip:16133957218@example.com!".
