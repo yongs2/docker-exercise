@@ -26,7 +26,7 @@ runit:
 
 .PHONY: push
 push:
-	docker tag ${IMG_NAME}:${IMG_TAG} ${REGISTRY_URL}/${IMG_NAME}:${IMG_TAG}
+	docker tag ${IMG_NAME} ${REGISTRY_URL}/${IMG_NAME}:${IMG_TAG}
 	docker push ${REGISTRY_URL}/${IMG_NAME}:${IMG_TAG}
 
 .PHONY: exec
