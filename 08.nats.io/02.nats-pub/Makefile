@@ -17,6 +17,13 @@ run:
 		--link nats:nats \
 		--rm --name ${IMG_NAME} ${IMG_NAME} || :
 
+.PHONY: runit
+runit:
+	docker run -it \
+		--link nats:nats \
+		--entrypoint "/bin/bash" \
+		--rm --name ${IMG_NAME} ${IMG_NAME} || :
+
 .PHONY: push
 push:
 	docker tag ${IMG_NAME}:${IMG_TAG} ${REGISTRY_URL}/${IMG_NAME}:${IMG_TAG}
