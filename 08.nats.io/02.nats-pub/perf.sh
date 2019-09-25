@@ -3,6 +3,6 @@
 i=0
 while [ $i -le ${1} ]
 do
-  nats-pub -s nats foo "Hello NATS again ${i}"
+  nats-pub -s ${NATS_URL} ${SUBJECT} "Hello NATS again ${i}"
   ((i++))
 done

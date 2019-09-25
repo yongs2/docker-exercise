@@ -17,6 +17,6 @@ ENV MESSAGE "test message"
 COPY --from=build /go/src/github.com/nats-io/nats.go/examples/nats-pub/nats-pub /go/bin
 
 WORKDIR /go/
-ADD entrypoint.sh entrypoint.sh
-RUN chmod +x entrypoint.sh
-ENTRYPOINT [ "/go/entrypoint.sh" ]
+ADD *.sh /go/bin/
+RUN chmod +x /go/bin/*.sh
+CMD [ "/go/bin/entrypoint.sh" ]
