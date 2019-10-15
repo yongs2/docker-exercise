@@ -1,0 +1,142 @@
+# 사내 개발 서버 테스트
+@hostname = 192.168.0.178
+@port = 7889
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+@admin_secret = janusoverlord
+@plugin = janus.plugin.textroom
+
+###
+# @name requestList
+# 0. 방 목록 조회
+POST https://{{host}}/admin
+Content-Type: {{contentType}}
+
+{
+    "janus":"message_plugin",
+    "transaction":"oPLZXMNbxAe1",
+    "admin_secret":"{{admin_secret}}",
+    "plugin":"{{plugin}}",
+    "request":{
+        "transaction":"aaaa",
+        "request":"list"
+    }
+}
+
+###
+# @name requestListParticipants 
+@room={{requestList.response.body.response.list[0].room}}
+# 1. 방 참여자 조회
+POST https://{{host}}/admin/
+Content-Type: {{contentType}}
+
+{
+    "janus":"message_plugin",
+    "transaction":"oPLZXMNbxAe1",
+    "admin_secret":"{{admin_secret}}",
+    "plugin":"{{plugin}}",
+    "request":{
+        "transaction":"aaaa",
+        "request":"listparticipants",
+        "room": {{room}}
+    }
+}
+
+###
+# @name announcement
+# 2. 공지 메시지 전송
+POST https://{{host}}/admin/
+Content-Type: {{contentType}}
+
+{
+    "janus":"message_plugin",
+    "transaction":"oPLZXMNbxAe1",
+    "admin_secret":"{{admin_secret}}",
+    "plugin":"{{plugin}}",
+    "request":{
+        "transaction":"aaaa",
+        "request" : "announcement",
+        "room" : {{room}},
+        "secret": "adminpwd",
+        "text" : "i'm speaking from aichatbot1"
+    }
+}
+
+###
+# @name createRoom
+# 3-1. 방 생성
+@myroom=10001
+POST https://{{host}}/admin/
+Content-Type: {{contentType}}
+
+{
+    "janus":"message_plugin",
+    "transaction":"oPLZXMNbxAe1",
+    "admin_secret":"{{admin_secret}}",
+    "plugin":"{{plugin}}",
+    "request":{
+        "transaction":"aaaa",
+        "request" : "create",
+        "room" : {{myroom}},
+        "secret": "adminpwd",
+        "description": "myroom",
+        "post" : "http://192.168.0.210:3000/posts",
+        "permanent": false
+    }
+}
+
+###
+# @name existsRoom
+# 3-2. 방 조회
+POST https://{{host}}/admin/
+Content-Type: {{contentType}}
+
+{
+    "janus":"message_plugin",
+    "transaction":"oPLZXMNbxAe1",
+    "admin_secret":"{{admin_secret}}",
+    "plugin":"{{plugin}}",
+    "request":{
+        "transaction":"aaaa",
+        "request" : "exists",
+        "room" : {{myroom}}
+    }
+}
+
+###
+# @name joinRoom
+# 3-3. 방 참여자 조회
+POST https://{{host}}/admin/
+Content-Type: {{contentType}}
+
+{
+    "janus":"message_plugin",
+    "transaction":"oPLZXMNbxAe1",
+    "admin_secret":"{{admin_secret}}",
+    "plugin":"{{plugin}}",
+    "request":{
+        "transaction":"aaaa",
+        "request":"listparticipants",
+        "room": {{myroom}}
+    }
+}
+
+###
+# @name destroyRoom
+# 3-4. 방 삭제
+POST https://{{host}}/admin/
+Content-Type: {{contentType}}
+
+{
+    "janus":"message_plugin",
+    "transaction":"oPLZXMNbxAe1",
+    "admin_secret":"{{admin_secret}}",
+    "plugin":"{{plugin}}",
+    "request":{
+        "transaction":"aaaa",
+        "request" : "destroy",
+        "room" : {{myroom}},
+        "secret": "adminpwd",
+        "permanent": false
+    }
+}
