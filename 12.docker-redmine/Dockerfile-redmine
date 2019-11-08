@@ -1,0 +1,23 @@
+FROM bitnami/redmine:4
+
+# Refer to https://github.com/bitnami/bitnami-docker-redmine
+
+LABEL MAINTAINER=yongs2@hotmail.com
+
+USER root
+
+# install dependency package
+RUN sudo apt-get update -y \
+    && apt-get install -y gcc make pkg-config unzip \
+    && apt-get install -y libxml2 default-libmysqlclient-dev libpq-dev \
+    && apt-get install -y imagemagick libmagickcore-dev libmagickwand-dev
+
+# install redmine plugins
+RUN cd /opt/bitnami/redmine/plugins \
+    && curl -O https://rubygems.org/downloads/redmine_crm-0.0.4.gem \
+    && sudo gem install redmine_crm \
+    && curl -O https://rubygems.org/downloads/vcard-0.2.13.gem \
+    && sudo gem install vcard spreadsheet
+
+RUN cd /opt/bitnami/redmine/ \
+    && sudo bundle install --no-deployment

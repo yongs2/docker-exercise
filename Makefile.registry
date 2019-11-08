@@ -1,0 +1,20 @@
+.PHONY: run
+run:
+	docker run \
+		-v ${HOME}/docker-registry/registry:/var/lib/registry \
+		-p 5000:5000 \
+		-d --rm --name docker-registry \
+		distribution/registry:2.6.0 || :
+
+.PHONY: exec
+exec:
+	docker exec -it docker-registry /bin/sh
+
+.PHONY: stop
+stop:
+	docker stop docker-registry || :
+
+.PHONY: logs
+logs:
+	docker logs -f docker-registry || :
+	
