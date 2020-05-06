@@ -1,0 +1,44 @@
+version: '3'
+services:
+    redis-master:
+        image: redis:latest
+        volumes:
+            - ./master/redis.conf:/usr/local/etc/redis/redis.conf
+            - ./master/data:/data
+        ports:
+            - "7000:6379"
+        entrypoint: redis-server /usr/local/etc/redis/redis.conf
+
+    redis-slave:
+        image: redis:latest
+        volumes:
+            - ./slave1/redis.conf:/usr/local/etc/redis/redis.conf
+            - ./slave1/data:/data
+        ports:
+            - "7001:6379"
+        entrypoint: redis-server /usr/local/etc/redis/redis.conf
+
+    redis-sentinel1 :
+        image: redis:latest
+        volumes:
+            - ./sentinel/sentinel1.conf:/usr/local/etc/sentinel/sentinel.conf
+        ports:
+            - "8001:26379"
+        entrypoint: redis-server /usr/local/etc/sentinel/sentinel.conf --sentinel
+
+    redis-sentinel2 :
+        image: redis:latest
+        volumes:
+            - ./sentinel/sentinel2.conf:/usr/local/etc/sentinel/sentinel.conf
+        ports:
+            - "8002:26379"
+        entrypoint: redis-server /usr/local/etc/sentinel/sentinel.conf --sentinel
+
+    redis-sentinel3 :
+        image: redis:latest
+        volumes:
+            - ./sentinel/sentinel3.conf:/usr/local/etc/sentinel/sentinel.conf
+        ports:
+            - "8003:26379"
+        entrypoint: redis-server /usr/local/etc/sentinel/sentinel.conf --sentinel
+        
