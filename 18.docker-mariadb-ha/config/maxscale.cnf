@@ -1,0 +1,57 @@
+[maxscale]
+threads=auto
+
+# Servers
+[Server-1]
+type=server
+address=mariadb1
+port=3306
+protocol=MariaDBBackend
+
+[Server-2]
+type=server
+address=mariadb2
+port=3306
+protocol=MariaDBBackend
+
+[Server-3]
+type=server
+address=mariadb3
+port=3306
+protocol=MariaDBBackend
+
+[Server-4]
+type=server
+address=mariadb4
+port=3306
+protocol=MariaDBBackend
+
+[MariaDB-Monitor]
+type=monitor
+module=mariadbmon
+servers=Server-1, Server-2, Server-3, Server-4
+user=maxuser
+password=password
+monitor_interval=1000
+enforce_read_only_slaves=true
+auto_failover=true
+auto_rejoin=true
+
+# This is the replication-rwsplit-service
+[Read-Write-Service]
+type=service
+router=readwritesplit
+servers=Server-1, Server-2, Server-3, Server-4
+user=maxuser
+password=password
+master_failure_mode=error_on_write
+master_reconnection=yes
+transaction_replay=yes
+delayed_retry_timeout=300
+slave_selection_criteria=ADAPTIVE_ROUTING
+
+[Read-Write-Listener]
+type=listener
+service=Read-Write-Service
+protocol=MariaDBClient
+port=4406

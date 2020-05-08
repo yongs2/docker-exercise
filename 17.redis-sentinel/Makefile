@@ -13,7 +13,7 @@ network:
 .PHONY: master
 master:
 	docker run --rm --name redis-master \
-		--net=redis-network \
+		--net=${NETWORK_NAME} \
 		-p 7000:6379 \
 		-v `pwd`/master/redis.conf:/usr/local/etc/redis/redis.conf \
 		-v `pwd`/master/data:/data \
@@ -24,7 +24,7 @@ master:
 .PHONY: slave1
 slave1:
 	docker run --rm --name redis-slave1 \
-		--net=redis-network \
+		--net=${NETWORK_NAME} \
 		-v `pwd`/slave1/redis.conf:/usr/local/etc/redis/redis.conf \
 		-v `pwd`/slave1/data:/data \
 		-p 7001:6379 \
@@ -35,7 +35,7 @@ slave1:
 .PHONY: cli1
 cli1:
 	docker run --rm -it --name redis-cli1 \
-		--net=redis-network \
+		--net=${NETWORK_NAME} \
 		-v `pwd`/slave1/redis.conf:/usr/local/etc/redis/redis.conf \
 		-v `pwd`/slave1/data:/data \
 		-p 7002:6379 \
@@ -46,7 +46,7 @@ cli1:
 sentinel1:
 	/bin/cp ./sentinel/sentinel.conf ./sentinel/sentinel1.conf
 	docker run --rm --name redis-sentinel1 \
-		--net=redis-network \
+		--net=${NETWORK_NAME} \
 		-v `pwd`/sentinel/sentinel1.conf:/usr/local/etc/sentinel/sentinel.conf \
 		-p 8001:26379 \
 		redis:latest \
@@ -56,7 +56,7 @@ sentinel1:
 sentinel2:
 	/bin/cp ./sentinel/sentinel.conf ./sentinel/sentinel2.conf
 	docker run --rm --name redis-sentinel2 \
-		--net=redis-network \
+		--net=${NETWORK_NAME} \
 		-v `pwd`/sentinel/sentinel2.conf:/usr/local/etc/sentinel/sentinel.conf \
 		-p 8002:26379 \
 		redis:latest \
@@ -66,7 +66,7 @@ sentinel2:
 sentinel3:
 	/bin/cp ./sentinel/sentinel.conf ./sentinel/sentinel3.conf
 	docker run --rm --name redis-sentinel3 \
-		--net=redis-network \
+		--net=${NETWORK_NAME} \
 		-v `pwd`/sentinel/sentinel3.conf:/usr/local/etc/sentinel/sentinel.conf \
 		-p 8003:26379 \
 		redis:latest \
@@ -81,12 +81,12 @@ stop:
 
 client0:
 	docker run -it --rm --name redis-client0 \
-		--net=redis-network \
+		--net=${NETWORK_NAME} \
 		redis:latest \
 		redis-cli -h redis-master -p 6379
 
 client1:
 	docker run -it --rm --name redis-client1 \
-		--net=redis-network \
+		--net=${NETWORK_NAME} \
 		redis:latest \
 		redis-cli -h redis-slave1 -p 6379
