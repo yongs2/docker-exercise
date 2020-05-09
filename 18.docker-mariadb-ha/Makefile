@@ -1,7 +1,7 @@
 # https://github.com/mariadb-faisalsaeed/mariadb-ha-setup/
 
-CONTAINER_ID=$(shell docker ps --filter name=mariadb -q)
-CONTAINER_IDS=$(shell docker ps --filter name=mariadb -q)
+MARIADB_IDS=$(shell docker ps --filter name=mariadb -q)
+MAXSCALE_IDS=$(shell docker ps --filter name=maxscale -q)
 NETWORK_NAME=mariadb-network
 
 DB_USER=agent
@@ -50,6 +50,14 @@ maxscale2:
 		-v `pwd`/config/maxscale.cnf:/etc/maxscale.cnf \
 		mariadb/maxscale:latest
 
+.PHONY: maxctrl1
+maxctrl1:
+	docker exec -it maxscale1 maxctrl
+
+.PHONY: maxctrl2
+maxctrl2:
+	docker exec -it maxscale2 maxctrl
+
 .PHONY: cli
 cli:
 	docker run --rm -it --name mariadb-cli \
@@ -70,6 +78,6 @@ cli2:
 
 .PHONY: stop
 stop:
-	docker stop ${CONTAINER_IDS}
-	docker rm ${CONTAINER_IDS}
+	docker stop ${MARIADB_IDS} ${MAXSCALE_IDS}
+	docker rm -f ${MARIADB_IDS} ${MAXSCALE_IDS}
 	docker network rm ${NETWORK_NAME}
