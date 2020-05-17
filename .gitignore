@@ -31,4 +31,9 @@
 # redis
 *.rdb
 
+# go extra
+github.com/*
+golang.org/*
+*.log
+
 # End of https://www.gitignore.io/api/linux,visualstudiocode
