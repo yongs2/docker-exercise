@@ -5,6 +5,12 @@ BASE_PORT=7000
 
 redis_cluster_run()
 {
+    MAX=$1
+    if [ "X$MAX" == "X" ] ; then
+        echo "Redis Cluster requires at least 3 master nodes."
+        MAX=3
+    fi
+
     for ind in `seq 1 ${MAX}`; do \
         let port=${BASE_PORT}+${ind}
         echo $port
@@ -14,6 +20,12 @@ redis_cluster_run()
 
 redis_cluster_create()
 {
+    MAX=$1
+    if [ "X$MAX" == "X" ] ; then
+        echo "Redis Cluster requires at least 3 master nodes."
+        MAX=3
+    fi
+
     IP=`hostname -i`
 
     for ind in `seq 1 ${MAX}`; do
@@ -31,14 +43,14 @@ redis_cluster_create()
 
 case $1 in
     start)
-        redis_cluster_run
+        redis_cluster_run $2
         ;;
     create)
-        redis_cluster_create
+        redis_cluster_create $2
         ;;
     all)
-        redis_cluster_run
-        redis_cluster_create
+        redis_cluster_run $2
+        redis_cluster_create $2
         ;;
     *)
         echo "$0 start|create|all" ;;
