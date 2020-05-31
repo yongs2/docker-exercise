@@ -24,3 +24,30 @@ cd jmeter-http2-plugin;
 mvn install
 ls -altr target/*.jar
 ```
+
+### 3) Fork 한 repository 최신으로 동기화하기
+
+```sh
+git clone https://github.com/yongs2/jmeter-http2-plugin.git
+cd jmeter-http2-plugin
+
+git remote -v
+origin	https://github.com/yongs2/jmeter-http2-plugin.git (fetch)
+origin	https://github.com/yongs2/jmeter-http2-plugin.git (push)
+
+git remote add upstream https://github.com/Blazemeter/jmeter-http2-plugin
+git remote -v
+origin	https://github.com/yongs2/jmeter-http2-plugin.git (fetch)
+origin	https://github.com/yongs2/jmeter-http2-plugin.git (push)
+upstream	https://github.com/Blazemeter/jmeter-http2-plugin (fetch)
+upstream	https://github.com/Blazemeter/jmeter-http2-plugin (push)
+
+git fetch upstream
+git merge upstream/master
+git push origin master
+
+git remote rm upstream
+remotes/origin/cleanup-http2-stream-handler
+git branch --delete cleanup-http2-stream-handler
+git push origin :cleanup-http2-stream-handler
+```
