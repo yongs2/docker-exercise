@@ -43,3 +43,17 @@ make node3
 ```sh
 /data/redis-node3-run.sh
 ```
+
+### 1.5 Load balancing
+
+- [HA Proxy](http://www.haproxy.org/)
+- [haproxy-2.1.git](http://git.haproxy.org/git/haproxy-2.1.git/)
+- [haproxy](https://github.com/haproxy/haproxy)
+- [Redis (7) HAProxy (load balancing)](https://velog.io/@labyu/Redis-7)
+- [haproxy & keepalived 로 프록시 구축하기](https://www.nakjunizm.com/2020/02/20/haproxy/)
+
+- docker run
+
+```sh
+docker pull haproxy:2.1.7-alpine
+```
