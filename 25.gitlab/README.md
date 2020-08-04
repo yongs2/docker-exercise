@@ -7,8 +7,9 @@
 ```sh
 export GITLAB_HOST=`curl 'https://api.ipify.org'`.sslip.io:9080
 mkdir gitlab
-make -f gitlab.mk run
+make -f gitlab.mk
 make -f gitlab.mk logs
+make -f gitlab.mk exec
 ```
 
 ### 1.2 connect gitlab
@@ -23,7 +24,8 @@ make -f gitlab.mk logs
 
 ```sh
 mkdir gitlab-runner
-make -f gitlab-runner.mk run
+make -f gitlab-runner.mk
+make -f gitlab-runner.mk logs
 ```
 
 ### 2.2 register
