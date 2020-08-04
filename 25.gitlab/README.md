@@ -5,7 +5,7 @@
 ### 1.1 run gitlab
 
 ```sh
-GITLAB_HOST=`curl 'https://api.ipify.org'`:9080
+export GITLAB_HOST=`curl 'https://api.ipify.org'`.sslip.io:9080
 mkdir gitlab
 make -f gitlab.mk run
 make -f gitlab.mk logs
@@ -32,4 +32,8 @@ make -f gitlab-runner.mk run
 make -f gitlab-runner.mk exec
 
 gitlab-runner register
+
+sed -i '/\[runners\.cache\.s3\]/d' /etc/gitlab-runner/config.toml
+sed -i '/\[runners\.cache\.gcs\]/d' /etc/gitlab-runner/config.toml
+
 ```
