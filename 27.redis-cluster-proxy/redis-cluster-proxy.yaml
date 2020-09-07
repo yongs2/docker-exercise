@@ -1,0 +1,77 @@
+#
+# redis-cluster-proxy service
+#
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "false"
+  name: redis-cluster-proxy
+  labels:
+    app: redis-cluster-proxy
+spec:
+  ports:
+  - port: 7888
+    targetPort: 7888
+    nodePort: 30092
+    name: rcp-external
+  type: NodePort
+  selector:
+    app: redis-cluster-proxy
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-cluster-proxy
+  labels:
+    app: redis-cluster-proxy
+spec:
+  serviceName: redis-cluster-proxy
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-cluster-proxy
+  template:
+    metadata:
+      labels:
+        app: redis-cluster-proxy
+    spec:
+      terminationGracePeriodSeconds: 1800
+      containers:
+      - name: redis-cluster-proxy
+        image: 192.168.5.69:5000/redis-cluster-proxy:1.0-beta2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 7888
+          name: rcp-external
+        resources:
+          limits:
+            cpu: "500m"
+            memory: 1Gi
+          requests:
+            cpu: "500m"
+            memory: 1Gi
+        command:
+        - /usr/local/bin/redis-cluster-proxy
+        args:
+        - "--port"
+        - "7888"
+        - "--enable-cross-slot"
+        - "--connections-pool-size"
+        - "20"
+        - "--connections-pool-min-size"
+        - "15" 
+        - "--connections-pool-spawn-rate"
+        - "2" 
+        - "--connections-pool-spawn-every"
+        - "500"
+        - redis6test:6379
+        - redis6test2:6379
+        - redis6test3:6379
+        - redis6test4:6379
+        - redis6test5:6379
+        - redis6test6:6379
+        - redis6test7:6379
+        - redis6test8:6379
+        - redis6test8:6379
