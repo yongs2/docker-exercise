@@ -1,0 +1,119 @@
+#
+# predixy service
+#
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "false"
+  name: predixy
+  labels:
+    app: predixy
+spec:
+  ports:
+  - port: 7617
+    targetPort: 7617
+    nodePort: 30091
+    name: predixy
+  type: NodePort
+  selector:
+    app: predixy
+---
+#
+# Redis configuration file for clustered mode
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: predixy-config
+data:
+  predixy.conf: |+
+    Bind 0.0.0.0:7617
+    WorkerThreads 4
+    MaxMemory 0
+    ClientTimeout 300
+    BufSize 4096
+    LogRotate 1d
+    LogVerbSample 0
+    LogDebugSample 0
+    LogInfoSample 10000
+    LogNoticeSample 1
+    LogWarnSample 1
+    LogErrorSample 1
+    Include cluster.conf
+
+  cluster.conf: |+
+    ClusterServerPool {
+      MasterReadPriority 60
+      StaticSlaveReadPriority 50
+      DynamicSlaveReadPriority 50
+      RefreshInterval 1
+      ServerTimeout 1
+      ServerFailureLimit 10
+      ServerRetryTimeout 1
+      KeepAlive 120
+      Servers {
+          + redis6test:6379
+          + redis6test2:6379
+          + redis6test3:6379
+          + redis6test4:6379
+          + redis6test5:6379
+          + redis6test6:6379
+          + redis6test7:6379
+          + redis6test8:6379
+          + redis6test8:6379
+      }
+    }
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: predixy
+  labels:
+    app: predixy
+spec:
+  serviceName: predixy
+  replicas: 1
+  selector:
+    matchLabels:
+      app: predixy
+  template:
+    metadata:
+      labels:
+        app: predixy
+    spec:
+      terminationGracePeriodSeconds: 1800
+      containers:
+      - name: predixy
+        image: 192.168.5.69:5000/docker-predixy:1.0.5
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 7617
+          name: predixy
+        resources:
+          limits:
+            cpu: "500m"
+            memory: 1Gi
+          requests:
+            cpu: "500m"
+            memory: 1Gi
+        command:
+        - /usr/local/bin/predixy
+        args:
+        - /etc/predixy/conf/predixy.conf
+
+        volumeMounts:
+        - name: conf
+          mountPath: /etc/predixy/conf
+          readOnly: false
+      volumes:
+      # Insert our pre-baked Redis configuration file into /conf/redis.conf
+      - name: conf
+        configMap:
+          name: predixy-config
+          items: 
+          - key: predixy.conf
+            path: predixy.conf
+          - key: cluster.conf
+            path: cluster.conf
