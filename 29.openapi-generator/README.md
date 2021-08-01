@@ -1,0 +1,61 @@
+## openapi-generator 를 기준을 3gpp yaml 파일 변환 작업
+
+- openapi-generator 를 fork 를 진행해서 작업 환경 구성
+
+```sh
+git clone https://github.com/yongs2/openapi-generator
+```
+
+- [docker 로 빌드 환경](https://github.com/OpenAPITools/openapi-generator/blob/master/Dockerfile)
+
+```sh
+cd $WORKSPACE;
+docker run -it --rm \
+    -v `pwd`/openapi-generator:/root/src \
+    -v `pwd`/5GC_APIs:/local \
+    --name mvn-jdk \
+    maven:3.6.3-jdk-11-openj9 /bin/bash
+```
+
+- 빌드 및 변환 작업
+
+```sh
+cd /root/src
+mvn -am -pl "modules/openapi-generator-cli" package -DskipTests=true -Dmaven.javadoc.skip=true -Djacoco.skip=true
+
+export JAVA_OPTS="${JAVA_OPTS} --global-property debugModels,debugOperations"
+export JAVA_OPTS="${JAVA_OPTS} -Dlog.level=debug"
+
+cd /local
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go
+
+java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go
+```
+
+## 별도의 패치 버전을 기준으로 비교 시험
+
+- [Resolve several issues in generated Go code](https://github.com/OpenAPITools/openapi-generator/pull/8491)
+- [Pull Request 소스](https://github.com/aeneasr/openapi-generator/tree/fix-go) 를 기준으로 비교
+
+- docker 빌드 환경
+
+```sh
+git clone -b fix-go --single-branch https://github.com/aeneasr/openapi-generator openapi-generator-fix-go
+
+docker run -it --rm \
+    -v `pwd`/openapi-generator-fix-go:/root/src \
+    -v `pwd`/5GC_APIs:/local \
+    --name mvn-jdk \
+    maven:3.6.3-jdk-11-openj9 /bin/bash
+
+docker exec -it mvn-jdk /bin/bash
+```
+
+- 빌드 및 변환 작업
+
+```sh
+cd /root/src
+mvn -am -pl "modules/openapi-generator-cli" package -DskipTests=true -Dmaven.javadoc.skip=true -Djacoco.skip=true
+
+java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/fix-go
+```
