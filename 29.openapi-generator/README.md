@@ -29,7 +29,7 @@ export JAVA_OPTS="${JAVA_OPTS} -Dlog.level=debug"
 cd /local
 java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go
 
-java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go
+java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go >java.log 2>&1
 ```
 
 ## 별도의 패치 버전을 기준으로 비교 시험
