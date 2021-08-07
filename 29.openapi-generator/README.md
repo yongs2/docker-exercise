@@ -11,8 +11,10 @@ git clone https://github.com/yongs2/openapi-generator
 ```sh
 cd $WORKSPACE;
 docker run -it --rm \
+    -v `pwd`/openapi-generator-m2:/root/.m2 \
     -v `pwd`/openapi-generator:/root/src \
     -v `pwd`/5GC_APIs:/local \
+    -w /root/src \
     --name mvn-jdk \
     maven:3.6.3-jdk-11-openj9 /bin/bash
 ```
@@ -27,9 +29,9 @@ export JAVA_OPTS="${JAVA_OPTS} --global-property debugModels,debugOperations"
 export JAVA_OPTS="${JAVA_OPTS} -Dlog.level=debug"
 
 cd /local
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/go 2>&1 > oag.log
 
-java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go
+java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/go
 ```
 
 ## 별도의 패치 버전을 기준으로 비교 시험
@@ -58,4 +60,10 @@ cd /root/src
 mvn -am -pl "modules/openapi-generator-cli" package -DskipTests=true -Dmaven.javadoc.skip=true -Djacoco.skip=true
 
 java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/fix-go
+```
+
+- inline_resolver 참고
+
+```sh
+git clone -b inline-resolver --single-branch https://github.com/fantavlik/openapi-generator openapi-generator-inline-resolver
 ```
