@@ -29,9 +29,9 @@ export JAVA_OPTS="${JAVA_OPTS} --global-property debugModels,debugOperations"
 export JAVA_OPTS="${JAVA_OPTS} -Dlog.level=debug"
 
 cd /local
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/go 2>&1 > oag.log
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/go >oag.log 2>&1
 
-java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/go
+java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go >oag.log 2>&1
 ```
 
 ## 별도의 패치 버전을 기준으로 비교 시험
