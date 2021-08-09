@@ -29,7 +29,15 @@ export JAVA_OPTS="${JAVA_OPTS} --global-property debugModels,debugOperations"
 export JAVA_OPTS="${JAVA_OPTS} -Dlog.level=debug"
 
 cd /local
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/go >oag.log 2>&1
+
+# test for required:[] in oneOf
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29122_NIDD >/local/out/oag.log 2>&1
+
+# test for inline_object, contentType
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29542_Nsmf_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29542_Nsmf_NIDD >/local/out/oag.log 2>&1
+
+# test for Nullable
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29512_Npcf_SMPolicyControl.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29512_Npcf_SMPolicyControl >/local/out/oag.log 2>&1
 
 java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go >oag.log 2>&1
 ```
@@ -66,4 +74,11 @@ java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openap
 
 ```sh
 git clone -b inline-resolver --single-branch https://github.com/fantavlik/openapi-generator openapi-generator-inline-resolver
+```
+
+- multipart/ mediatpe 참고
+
+```sh
+https://github.com/OpenAPITools/openapi-generator/pull/5613
+https://github.com/zhemant/openapi-generator/tree/mpandencoding
 ```
