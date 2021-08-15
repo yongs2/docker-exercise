@@ -31,13 +31,16 @@ export JAVA_OPTS="${JAVA_OPTS} -Dlog.level=debug"
 cd /local
 
 # test for required:[] in oneOf
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29122_NIDD >/local/out/oag.log 2>&1
+mkdir -p /local/out/TS29122_NIDD/;
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29122_NIDD >/local/out/TS29122_NIDD/oag.log 2>&1
 
 # test for inline_object, contentType
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29542_Nsmf_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29542_Nsmf_NIDD >/local/out/oag.log 2>&1
+mkdir -p /local/out/TS29542_Nsmf_NIDD/;
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29542_Nsmf_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29542_Nsmf_NIDD >/local/out/TS29542_Nsmf_NIDD/oag.log 2>&1
 
 # test for Nullable
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29512_Npcf_SMPolicyControl.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29512_Npcf_SMPolicyControl >/local/out/oag.log 2>&1
+mkdir -p /local/out/TS29512_Npcf_SMPolicyControl/;
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29512_Npcf_SMPolicyControl.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29512_Npcf_SMPolicyControl >/local/out/TS29512_Npcf_SMPolicyControl/oag.log 2>&1
 
 java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go >oag.log 2>&1
 ```
@@ -52,7 +55,9 @@ java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openap
 ```sh
 git clone -b fix-go --single-branch https://github.com/aeneasr/openapi-generator openapi-generator-fix-go
 
+cd $WORKSPACE;
 docker run -it --rm \
+    -v `pwd`/openapi-generator-m2:/root/.m2 \
     -v `pwd`/openapi-generator-fix-go:/root/src \
     -v `pwd`/5GC_APIs:/local \
     --name mvn-jdk \
@@ -81,4 +86,17 @@ git clone -b inline-resolver --single-branch https://github.com/fantavlik/openap
 ```sh
 https://github.com/OpenAPITools/openapi-generator/pull/5613
 https://github.com/zhemant/openapi-generator/tree/mpandencoding
+```
+
+- fix-go 를 참조하여, GoClientCodegen.java 에서 array와 map 에 Nullable 을 추가
+  - TS29512_Npcf_SMPolicyControl 의 PccRule 의 refChgData 를 NullArrayString 으로 변환할 수 있도록 보완
+
+## 변환 후 model 및 api 테스트
+
+```sh
+cd $WORKSPACE;
+docker run -it --rm \
+    -v `pwd`/5GC_APIs:/local \
+    --name golang \
+    golang:latest /bin/bash
 ```
