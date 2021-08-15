@@ -87,6 +87,8 @@ git clone -b inline-resolver --single-branch https://github.com/fantavlik/openap
 https://github.com/OpenAPITools/openapi-generator/pull/5613
 https://github.com/zhemant/openapi-generator/tree/mpandencoding
 ```
+  - multipart 부분을 이 소스를 참고하여 수정하려고 했으나, 소스 차이가 많아서 적용 실패
+  - TS29542_Nsmf_NIDD.yaml 은 openapi-generator-cli 호출 후 수작업으로 deliverRequest 의 multipart 부분을 수작업이 
 
 - fix-go 를 참조하여, GoClientCodegen.java 에서 array와 map 에 Nullable 을 추가
   - TS29512_Npcf_SMPolicyControl 의 PccRule 의 refChgData 를 NullArrayString 으로 변환할 수 있도록 보완
