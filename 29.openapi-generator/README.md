@@ -14,6 +14,7 @@ docker run -it --rm \
     -v `pwd`/openapi-generator-m2:/root/.m2 \
     -v `pwd`/openapi-generator:/root/src \
     -v `pwd`/5GC_APIs:/local \
+    -v `pwd`/openapi:/out \
     -w /root/src \
     --name mvn-jdk \
     maven:3.6.3-jdk-11-openj9 /bin/bash
@@ -31,18 +32,18 @@ export JAVA_OPTS="${JAVA_OPTS} -Dlog.level=debug"
 cd /local
 
 # test for required:[] in oneOf
-mkdir -p /local/out/TS29122_NIDD/;
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29122_NIDD >/local/out/TS29122_NIDD/oag.log 2>&1
+mkdir -p /out/TS29122_NIDD/;
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /out/TS29122_NIDD >/out/TS29122_NIDD/oag.log 2>&1
 
 # test for inline_object, contentType
-mkdir -p /local/out/TS29542_Nsmf_NIDD/;
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29542_Nsmf_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29542_Nsmf_NIDD >/local/out/TS29542_Nsmf_NIDD/oag.log 2>&1
+mkdir -p /out/TS29542_Nsmf_NIDD/;
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29542_Nsmf_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /out/TS29542_Nsmf_NIDD >/out/TS29542_Nsmf_NIDD/oag.log 2>&1
 
 # test for Nullable
-mkdir -p /local/out/TS29512_Npcf_SMPolicyControl/;
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29512_Npcf_SMPolicyControl.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /local/out/TS29512_Npcf_SMPolicyControl >/local/out/TS29512_Npcf_SMPolicyControl/oag.log 2>&1
+mkdir -p /out/TS29512_Npcf_SMPolicyControl/;
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29512_Npcf_SMPolicyControl.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /out/TS29512_Npcf_SMPolicyControl >/out/TS29512_Npcf_SMPolicyControl/oag.log 2>&1
 
-java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/go >oag.log 2>&1
+java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /out/go >oag.log 2>&1
 ```
 
 ## 별도의 패치 버전을 기준으로 비교 시험
@@ -60,6 +61,7 @@ docker run -it --rm \
     -v `pwd`/openapi-generator-m2:/root/.m2 \
     -v `pwd`/openapi-generator-fix-go:/root/src \
     -v `pwd`/5GC_APIs:/local \
+    -v `pwd`/openapi:/out \
     --name mvn-jdk \
     maven:3.6.3-jdk-11-openj9 /bin/bash
 
@@ -72,7 +74,7 @@ docker exec -it mvn-jdk /bin/bash
 cd /root/src
 mvn -am -pl "modules/openapi-generator-cli" package -DskipTests=true -Dmaven.javadoc.skip=true -Djacoco.skip=true
 
-java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /local/out/fix-go
+java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /out/fix-go
 ```
 
 - inline_resolver 참고
@@ -99,6 +101,7 @@ https://github.com/zhemant/openapi-generator/tree/mpandencoding
 cd $WORKSPACE;
 docker run -it --rm \
     -v `pwd`/5GC_APIs:/local \
+    -v `pwd`/openapi:/out \
     --name golang \
     golang:latest /bin/bash
 ```
