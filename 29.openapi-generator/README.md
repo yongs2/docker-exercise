@@ -32,24 +32,42 @@ export JAVA_OPTS="${JAVA_OPTS} -Dlog.level=debug"
 cd /local
 
 # test for required:[] in oneOf
-mkdir -p /out/TS29122_NIDD/;
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /out/TS29122_NIDD >/out/TS29122_NIDD/oag.log 2>&1
+YAML_NAME=TS29122_NIDD
 
 # test for inline_object, contentType
-mkdir -p /out/TS29542_Nsmf_NIDD/;
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29542_Nsmf_NIDD.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /out/TS29542_Nsmf_NIDD >/out/TS29542_Nsmf_NIDD/oag.log 2>&1
+YAML_NAME=TS29542_Nsmf_NIDD
 
 # test for Nullable
-mkdir -p /out/TS29512_Npcf_SMPolicyControl/;
-java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29512_Npcf_SMPolicyControl.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /out/TS29512_Npcf_SMPolicyControl >/out/TS29512_Npcf_SMPolicyControl/oag.log 2>&1
+YAML_NAME=TS29512_Npcf_SMPolicyControl
 
-java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/TS29122_NIDD.yaml -g go -o /out/go >oag.log 2>&1
+# test for multiple oneOf (SubscriptionData.subscrCond)
+YAML_NAME=TS29510_Nnrf_NFManagement
+
+# test for allOf pattern(Ipv6Addr, Ipv6AddrRm, Ipv6Prefix, Ipv6PrefixRm)
+YAML_NAME=TS29571_CommonData.yaml
+
+# test command commonly
+mkdir -p /out/${YAML_NAME}/;
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /local/${YAML_NAME}.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /out/${YAML_NAME} >/out/${YAML_NAME}/oag.log 2>&1
 ```
+
+- 위  기능을 시험하기 위한 개별 시험
+
+```sh
+# test for allOf pattern (Ipv4Addr)
+YAML_NAME=ts_allof_pattern
+mkdir -p /out/${YAML_NAME}/;
+java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /out/${YAML_NAME}.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /out/${YAML_NAME} >/out/${YAML_NAME}/oag.log 2>&1
+```
+
 
 ## 별도의 패치 버전을 기준으로 비교 시험
 
 - [Resolve several issues in generated Go code](https://github.com/OpenAPITools/openapi-generator/pull/8491)
 - [Pull Request 소스](https://github.com/aeneasr/openapi-generator/tree/fix-go) 를 기준으로 비교
+- [fix unnecessary allOf models](https://github.com/leo-sale/openapi-generator/commits/fix-unnecessary-models) : 반영하였으나, allOf 문제는 아직 해결 안됨
+- [Readonly attribute](https://github.com/CiscoM31/openapi-generator)
+
 
 - docker 빌드 환경
 
@@ -59,13 +77,13 @@ git clone -b fix-go --single-branch https://github.com/aeneasr/openapi-generator
 cd $WORKSPACE;
 docker run -it --rm \
     -v `pwd`/openapi-generator-m2:/root/.m2 \
-    -v `pwd`/openapi-generator-fix-go:/root/src \
+    -v `pwd`/openapi-generator-latest:/root/src \
     -v `pwd`/5GC_APIs:/local \
     -v `pwd`/openapi:/out \
-    --name mvn-jdk \
+    --name mvn-jdk-latest \
     maven:3.6.3-jdk-11-openj9 /bin/bash
 
-docker exec -it mvn-jdk /bin/bash
+docker exec -it mvn-jdk-latest /bin/bash
 ```
 
 - 빌드 및 변환 작업
@@ -83,7 +101,7 @@ java -Dlog.level=info -jar /root/src/modules/openapi-generator-cli/target/openap
 git clone -b inline-resolver --single-branch https://github.com/fantavlik/openapi-generator openapi-generator-inline-resolver
 ```
 
-- multipart/ mediatpe 참고
+- multipart/ mediatype 참고
 
 ```sh
 https://github.com/OpenAPITools/openapi-generator/pull/5613

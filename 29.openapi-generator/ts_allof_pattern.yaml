@@ -1,0 +1,36 @@
+openapi: 3.0.0
+
+info:
+  version: '0.0.1'
+  title: 'Test case for allOf pattern'
+  description: |
+    test case
+
+paths: {}
+components:
+  schemas:
+    Ipv6Prefix:
+      type: string
+      allOf:
+        - pattern: '^((:|(0?|([1-9a-f][0-9a-f]{0,3}))):)((0?|([1-9a-f][0-9a-f]{0,3})):){0,6}(:|(0?|([1-9a-f][0-9a-f]{0,3})))(\/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))$'
+        - pattern: '^((([^:]+:){7}([^:]+))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?))(\/.+)$'
+      example: '2001:db8:abcd:12::0/64'
+    UmtLocationArea5G:
+      allOf:
+        - $ref: '#/components/schemas/Ipv4Addr'
+        - type: object
+          properties:
+            umtTime:
+              $ref: '#/components/schemas/TimeOfDay'
+            umtDuration:
+              $ref: '#/components/schemas/DurationSec'
+    Ipv4Addr:
+      type: string
+      description: string identifying a Ipv4 address formatted in the "dotted decimal" notation as defined in IETF RFC 1166.
+    TimeOfDay:
+      type: string
+      description: String with format partial-time or full-time as defined in subclause 5.6 of IETF RFC 3339. Examples, 20:15:00, 20:15:00-08:00 (for 8 hours behind UTC).
+    DurationSec:
+      type: integer
+      minimum: 0
+      description: Unsigned integer identifying a period of time in units of seconds.
