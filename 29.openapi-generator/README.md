@@ -60,7 +60,6 @@ mkdir -p /out/${YAML_NAME}/;
 java -Dlog.level=debug -jar /root/src/modules/openapi-generator-cli/target/openapi-generator-cli.jar generate -i /out/${YAML_NAME}.yaml -g go --additional-properties=isGoSubmodule=true,enumClassPrefix=true,generateInterfaces=true -o /out/${YAML_NAME} >/out/${YAML_NAME}/oag.log 2>&1
 ```
 
-
 ## 별도의 패치 버전을 기준으로 비교 시험
 
 - [Resolve several issues in generated Go code](https://github.com/OpenAPITools/openapi-generator/pull/8491)
@@ -112,6 +111,28 @@ https://github.com/zhemant/openapi-generator/tree/mpandencoding
 
 - fix-go 를 참조하여, GoClientCodegen.java 에서 array와 map 에 Nullable 을 추가
   - TS29512_Npcf_SMPolicyControl 의 PccRule 의 refChgData 를 NullArrayString 으로 변환할 수 있도록 보완
+
+## upstream 변경 사항 반영
+
+- remote 의 최신 변경 사항을 master 에 반영
+
+```sh
+git checkout master
+git remote add upstream https://github.com/OpenAPITools/openapi-generator
+git remote -v
+git fetch upstream
+git checkout master
+git merge upstream/master
+git push
+```
+
+- 현재 작업 중인 branch 는 fix-go-oneof
+
+```sh
+git checkout fix-go-oneof
+git merge master
+
+```
 
 ## 변환 후 model 및 api 테스트
 
