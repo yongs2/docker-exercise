@@ -1,0 +1,70 @@
+openapi: 3.0.0
+
+info:
+  version: '0.0.1'
+  title: 'Test case for anyOf pattern'
+  description: |
+    test case
+
+servers:
+  - url: '{apiRoot}/nnrf-nfm/v1'
+    variables:
+      apiRoot:
+        default: https://example.com
+
+security:
+  - {}
+  - oAuth2ClientCredentials:
+      - nnrf-nfm
+
+paths:
+  /nf-instances:
+    get:
+      summary: Retrieves a collection of NF Instances
+      operationId: GetNFInstances
+      tags:
+        - NF Instances (Store)
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/3gppHal+json:
+              schema:
+                type: object
+                properties:
+                  profile:
+                    $ref: '#/components/schemas/NFProfile'
+                minProperties: 1
+
+components:
+  schemas:
+    NFProfile:
+      description: Information of an NF Instance discovered by the NRF
+      type: object
+      required:
+        - nfInstanceId
+      anyOf:
+        - required: [ fqdn ]
+        - required: [ ipv4Addresses ]
+        - required: [ ipv6Addresses ]
+      properties:
+        nfInstanceId:
+          type: string
+        nfInstanceName:
+          type: string
+        fqdn:
+          type: string
+        ipv4Addresses:
+          type: string
+        ipv6Addresses:
+          type: string
+    NfInstanceId:
+      type: string
+      format: uuid 

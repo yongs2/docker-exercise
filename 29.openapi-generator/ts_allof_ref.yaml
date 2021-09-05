@@ -1,0 +1,36 @@
+openapi: 3.0.0
+
+info:
+  version: '0.0.1'
+  title: 'Test case for allOf pattern'
+  description: |
+    test case
+
+paths: {}
+components:
+  schemas:
+    RdsDownlinkDataDeliveryFailure:
+      allOf:
+        - $ref: '#/components/schemas/ProblemDetails'
+        - type: object
+          properties:
+            requestedRetransmissionTime:
+              $ref: '#/components/schemas/DateTime'
+    ProblemDetails:
+      type: object
+      properties:
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem. 
+        status:
+          type: integer
+          description: The HTTP status code for this occurrence of the problem.
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+        cause:
+          type: string
+          description: A machine-readable application error cause specific to this occurrence of the problem. This IE should be present and provide application-related error information, if available.
+    DateTime:
+      type: string
+      description: string with format "date-time" as defined in OpenAPI.

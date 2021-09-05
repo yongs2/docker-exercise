@@ -9,12 +9,23 @@ info:
 paths: {}
 components:
   schemas:
+    AllOfIpv6Set:
+      type: object
+      properties:
+        Ipv6Prefix:
+          $ref: '#/components/schemas/Ipv6Prefix'
+        expectedUmts:
+          type: array
+          items:
+            $ref: '#/components/schemas/UmtLocationArea5G'
+          minItems: 1
+          description: Identifies the UE's expected geographical movement. The attribute is only applicable in 5G.
     Ipv6Prefix:
       type: string
-      allOf:
-        - pattern: '^((:|(0?|([1-9a-f][0-9a-f]{0,3}))):)((0?|([1-9a-f][0-9a-f]{0,3})):){0,6}(:|(0?|([1-9a-f][0-9a-f]{0,3})))(\/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))$'
-        - pattern: '^((([^:]+:){7}([^:]+))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?))(\/.+)$'
-      example: '2001:db8:abcd:12::0/64'
+      # allOf:  // 현재 openapi-generator 에서는 allOf 하위 pattern 을 별도의 schema 로 분류하므로, 정상적 처리를 위해서 주석 처리 필요
+      #   - pattern: '^((:|(0?|([1-9a-f][0-9a-f]{0,3}))):)((0?|([1-9a-f][0-9a-f]{0,3})):){0,6}(:|(0?|([1-9a-f][0-9a-f]{0,3})))(\/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))$'
+      #   - pattern: '^((([^:]+:){7}([^:]+))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?))(\/.+)$'
+      # example: '2001:db8:abcd:12::0/64'
     UmtLocationArea5G:
       allOf:
         - $ref: '#/components/schemas/Ipv4Addr'
@@ -24,6 +35,14 @@ components:
               $ref: '#/components/schemas/TimeOfDay'
             umtDuration:
               $ref: '#/components/schemas/DurationSec'
+    SubscriptionData:
+      description: Information of a subscription to notifications to NRF events, included in subscription requests and responses
+      type: object
+      properties:
+        requesterFeatures:
+          writeOnly: true
+          allOf:
+            - $ref: '#/components/schemas/SupportedFeatures'
     Ipv4Addr:
       type: string
       description: string identifying a Ipv4 address formatted in the "dotted decimal" notation as defined in IETF RFC 1166.
@@ -34,3 +53,6 @@ components:
       type: integer
       minimum: 0
       description: Unsigned integer identifying a period of time in units of seconds.
+    SupportedFeatures:
+      type: string
+      pattern: '^[A-Fa-f0-9]*$'

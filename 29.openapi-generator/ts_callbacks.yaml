@@ -1,0 +1,139 @@
+openapi: 3.0.0
+
+info:
+  version: '0.0.1'
+  title: 'Test case for callbacks pattern'
+  description: |
+    test case
+
+servers:
+  - url: '{apiRoot}/npcf-smpolicycontrol/v1'
+    variables:
+      apiRoot:
+        default: https://example.com
+
+security:
+  - {}
+  - oAuth2ClientCredentials:
+      - npcf-smpolicycontrol
+
+paths:
+  /sm-policies:
+    post:
+      summary: Create a new Individual SM Policy
+      operationId: CreateSMPolicy
+      tags:
+        - SM Policies (Collection)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmPolicyContextData'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmPolicyDecision'
+          headers:
+            Location:
+              description: 'Contains the URI of the newly created resource'
+              required: true
+              schema:
+                type: string
+      callbacks:
+        SmPolicyUpdateNotification:
+          '{$request.body#/notificationUri}/update': 
+            post:
+              requestBody:
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/SmPolicyNotification'
+              responses:
+                '200':
+                  description: OK. The current applicable values corresponding to the policy control request trigger is reported
+                  content:
+                    application/problem+json:
+                      schema:
+                        oneOf:
+                          - $ref: '#/components/schemas/UeCampingRep'
+                          - type: array
+                            items:
+                              $ref: '#/components/schemas/PartialSuccessReport'
+                            minItems: 1
+                          - type: array
+                            items:
+                              $ref: '#/components/schemas/PolicyDecisionFailureCode'
+                            minItems: 1
+
+components:
+  schemas:
+    SmPolicyContextData:
+      type: object
+      properties:
+        supi:
+          $ref: '#/components/schemas/Supi'
+        notificationUri:
+          $ref: '#/components/schemas/Uri'
+      required:
+        - supi
+        - notificationUri
+    SmPolicyDecision:
+      type: object
+      properties:
+        pcscfRestIndication:
+          type: boolean
+          description: If it is included and set to true, it indicates the P-CSCF Restoration is requested.
+        offline:
+          type: boolean
+          description: Indicates the offline charging is applicable to the PDU session when it is included and set to true.
+        online:
+          type: boolean
+          description: Indicates the online charging is applicable to the PDU session when it is included and set to true.
+    SmPolicyNotification:
+      type: object
+      properties:
+        resourceUri:
+          $ref: '#/components/schemas/Uri'
+        smPolicyDecision:
+          $ref: '#/components/schemas/SmPolicyDecision'
+    UeCampingRep:
+      type: object
+      properties:
+        accessType:
+          $ref: '#/components/schemas/AccessType'
+    PartialSuccessReport:
+      type: object
+      properties:
+        failureCause:
+          $ref: '#/components/schemas/FailureCause'
+      required:
+        - failureCause
+    PolicyDecisionFailureCode:
+      anyOf:
+      - type: string
+        enum:
+          - TRA_CTRL_DECS_ERR
+          - QOS_DECS_ERR
+      - type: string
+    FailureCause:
+      anyOf:
+      - type: string
+        enum:
+          - PCC_RULE_EVENT
+          - PCC_QOS_FLOW_EVENT
+      - type: string
+    AccessType:
+      type: string
+      enum:
+        - 3GPP_ACCESS
+        - NON_3GPP_ACCESS
+    Supi:
+      type: string
+      pattern: '^(imsi-[0-9]{5,15}|nai-.+|gci-.+|gli-.+|.+)$'
+    Uri:
+      type: string
