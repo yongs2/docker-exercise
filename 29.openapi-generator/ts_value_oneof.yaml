@@ -1,0 +1,51 @@
+openapi: 3.0.0
+
+info:
+  version: '0.0.1'
+  title: 'Test case for value oneOf pattern'
+  description: |
+    test case
+
+servers:
+  - url: '{apiRoot}/nudr-dr/v2'
+    variables:
+      apiRoot:
+        default: https://example.com
+
+security:
+  - {}
+  - oAuth2ClientCredentials:
+      - nudr-dr
+
+paths: {}
+
+components:
+  schemas:
+    OperatorSpecificDataContainer:
+      type: object
+      required:
+        - dataType
+        - value
+      properties:
+        dataType:
+          type: string
+          enum:
+            - string
+            - integer
+            - number
+            - boolean
+            - object
+        dataTypeDefinition:
+          type: string
+        value:
+          oneOf:
+            - type: string
+            - type: integer
+            - type: number
+            - type: boolean
+            - type: object
+        supportedFeatures:
+          $ref: '#/components/schemas/SupportedFeatures'
+    SupportedFeatures:
+      type: string
+      pattern: '^[A-Fa-f0-9]*$'
