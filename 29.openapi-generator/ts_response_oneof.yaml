@@ -1,0 +1,116 @@
+openapi: 3.0.0
+
+info:
+  version: '0.0.1'
+  title: 'Test case for response oneOf body pattern'
+  description: |
+    test case
+
+servers:
+  - url: '{apiRoot}/nudm-sdm/v2'
+    variables:
+      apiRoot:
+        default: https://example.com
+
+security:
+  - {}
+  - oAuth2ClientCredentials:
+      - nudm-sdm
+
+paths:
+  /{ueId}/sdm-subscriptions/{subscriptionId}:
+    patch:
+      summary: modify the subscription
+      operationId: Modify
+      tags:
+        - Subscription Modification
+      parameters:
+        - name: ueId
+          in: path
+          description: Identity of the user
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarUeId'
+        - name: subscriptionId
+          in: path
+          description: Id of the SDM Subscription
+          required: true
+          schema:
+            type: string
+        - name: supported-features
+          in: query
+          description: Features required to be supported by the target NF
+          schema:
+            $ref: '#/components/schemas/SupportedFeatures'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SdmSubsModification'
+        required: true
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SdmSubscription'
+                  - $ref: '#/components/schemas/PatchResult'
+
+components:
+  schemas:
+    SdmSubsModification:
+      type: object
+      properties:
+        expires:
+          $ref: '#/components/schemas/DateTime'
+        monitoredResourceUris:
+          type: array
+          items:
+            $ref: '#/components/schemas/Uri'
+          minItems: 1
+    SdmSubscription:
+      type: object
+      required:
+        - nfInstanceId
+        - callbackReference
+      properties:
+        nfInstanceId:
+          $ref: '#/components/schemas/NfInstanceId'
+        callbackReference:
+          $ref: '#/components/schemas/Uri'
+    PatchResult:
+      type: object
+      required:
+        - report
+      properties:
+       report:
+        type: array
+        items:
+          $ref: '#/components/schemas/ReportItem'
+        minItems: 1
+    ReportItem:
+      type: object
+      required:
+        - path
+      properties:
+        path:
+          type: string
+    NfInstanceId:
+      type: string
+      format: uuid
+    Supi:
+      type: string
+      pattern: '^(imsi-[0-9]{5,15}|nai-.+|gci-.+|gli-.+|.+)$'
+    Uri:
+      type: string
+    DateTime:
+      format: date-time
+      type: string
+    VarUeId:
+      type: string
+      pattern: '^(imsi-[0-9]{5,15}|nai-.+|msisdn-[0-9]{5,15}|extid-[^@]+@[^@]+|gci-.+|gli-.+|.+)$'
+    SupportedFeatures:
+      type: string
+      pattern: '^[A-Fa-f0-9]*$'
