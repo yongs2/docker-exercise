@@ -1,0 +1,31 @@
+openapi: 3.0.0
+
+info:
+  version: '0.0.1'
+  title: 'Test case for nullable [map]string pattern'
+  description: |
+    test case
+
+paths: {}
+components:
+  schemas:
+    SmPolicyDnnDataPatch:
+      description: Contains the SM policy data for a given DNN (and S-NSSAI).
+      type: object
+      properties:
+        dnn:
+          $ref: '#/components/schemas/Dnn'
+        bdtRefIds:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/BdtReferenceIdRm'
+          minProperties: 1
+          nullable: true
+      required:
+        - dnn
+    BdtReferenceIdRm:
+      type: string
+      description: This data type is defined in the same way as the BdtReferenceId data type, but with the nullable property set to true.
+      nullable: true
+    Dnn:
+      type: string
