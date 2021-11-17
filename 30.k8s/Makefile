@@ -4,6 +4,7 @@ IMG_NAME := k8s
 IMG_TAG := latest
 ALPINE_VERSION := 3.14.2
 YQ_VERSION := 4.14.1
+REGISTRY_URL := docker.io/yongs2
 
 .PHONY: build
 build:
@@ -20,8 +21,8 @@ run:
 
 .PHONY: push
 push:
-	docker tag ${IMG_NAME} ${IMG_NAME}:${IMG_TAG}
-	docker push ${IMG_NAME}:${IMG_TAG}
+	docker tag ${IMG_NAME} ${REGISTRY_URL}/${IMG_NAME}:${IMG_TAG}
+	docker push ${REGISTRY_URL}/${IMG_NAME}:${IMG_TAG}
 
 .PHONY: exec
 exec:
@@ -39,4 +40,4 @@ logs:
 clean:
 	docker stop ${IMG_NAME} || :
 	docker rm ${IMG_NAME} || :
-	docker rmi ${IMG_NAME} ${IMG_NAME}:${IMG_TAG} ${IMG_NAME}:${IMG_TAG} || :
+	docker rmi ${IMG_NAME} ${IMG_NAME}:${IMG_TAG} ${REGISTRY_URL}/${IMG_NAME}:${IMG_TAG} || :
