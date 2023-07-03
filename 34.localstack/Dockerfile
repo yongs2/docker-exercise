@@ -1,7 +1,7 @@
 ARG LS_VER=2.0.0
 FROM localstack/localstack:${LS_VER}
 
-LABEL maintainer="yslee1@ntels.com"
+LABEL maintainer="yongs2@hotmail.com"
 
 # Add path to localstack
 ENV PATH=/opt/code/localstack/bin:$PATH

@@ -2,7 +2,7 @@ ARG REGISTRY_URL=docker.io/yongs2
 ARG ROCKY_VERSION=8.5.20220308
 FROM ${REGISTRY_URL}/rockylinux:${ROCKY_VERSION}
 
-LABEL maintainer="yongs2"
+LABEL maintainer="yongs2@hotmail.com"
 
 # install essential dev tools
 RUN dnf -y install gcc make git

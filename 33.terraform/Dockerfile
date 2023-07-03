@@ -1,7 +1,7 @@
 ARG TF_VER=1.4.2
 FROM hashicorp/terraform:${TF_VER}
 
-LABEL maintainer="yslee1@ntels.com"
+LABEL maintainer="yongs2@hotmail.com"
 
 RUN apk add jq docker curl
 

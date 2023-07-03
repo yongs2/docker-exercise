@@ -1,6 +1,8 @@
 ARG DOCKER_VERSION=20.10.10-alpine3.14
 FROM docker:${DOCKER_VERSION}
 
+LABEL maintainer="yongs2@hotmail.com"
+
 # install tool
 RUN apk add --update --no-cache curl ca-certificates bash git make openssl
 

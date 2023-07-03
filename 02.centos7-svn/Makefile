@@ -1,6 +1,6 @@
 #MAKEFILE
 
-REGISTRY_URL := 192.168.0.210:5000
+REGISTRY_URL := docker.io/yongs2
 IMG_NAME := centos7-svn
 IMG_TAG := 1.0.0
 

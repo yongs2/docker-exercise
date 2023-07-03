@@ -1,6 +1,6 @@
 # Makefile
 
-REGISTRY_URL := 127.0.0.1:5000
+REGISTRY_URL := docker.io/yongs2
 IMG_NAME := centos8-dev
 IMG_TAG := 1.0.0
 
