@@ -2,10 +2,11 @@
 
 IMG_NAME=registry
 IMG_TAG=2
-BASE_DIR=${HOME}/registry
+BASE_DIR=${HOME}/docker/registry
 
-## Example
-# vi /etc/docker/daemon.json
+## 다음이 반드시 설정되어야 한다.
+# /etc/docker/daemon.json
+#  "insecure-registries": ["127.0.0.1:5000"],
 #  "registry-mirrors": ["http://127.0.0.1:5000"],
 
 run()

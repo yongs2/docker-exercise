@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-GO_VERSION := 1.22.0
+GO_VERSION := 1.22.7
 IMG_NAME := capo-godev
 IMG_TAG := ${GO_VERSION}
 REGISTRY_URL := $${MY_REGISTRY_URL:=docker.io/yongs2}
