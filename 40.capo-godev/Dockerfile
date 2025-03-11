@@ -25,6 +25,14 @@ RUN apt-get -y update \
 RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime \
     && echo "Asia/Seoul" > /etc/timezone
 
+# install golangci-lint
+RUN LATEST_VERSION=`curl -s "https://api.github.com/repos/golangci/golangci-lint/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'` \
+    && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin ${LATEST_VERSION}
+
+# install gosec
+RUN LATEST_VERSION=`curl -s "https://api.github.com/repos/securego/gosec/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'` \
+    && curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin ${LATEST_VERSION}
+
 WORKDIR /go/src
 
 CMD [ "/bin/bash" ]
