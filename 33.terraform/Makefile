@@ -1,8 +1,8 @@
 #!/usr/bin/make -f
 
-IMG_NAME := terraform
-IMG_TAG := 1.4.2
-REGISTRY_URL=192.168.5.69:5000
+IMG_NAME ?= terraform
+IMG_TAG ?= 1.12
+REGISTRY_URL ?= 192.168.5.69:5000
 
 all: chk build
 
@@ -50,3 +50,4 @@ clean:
 
 regInfo:
 	@printf     "\tDocker Registry       : ${REGISTRY_URL}\n"
+	@printf     "\tImage                 : ${IMG_NAME}:${IMG_TAG}\n"
