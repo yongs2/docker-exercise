@@ -2,6 +2,7 @@
 
 IMG_NAME ?= terraform
 IMG_TAG ?= 1.12
+CAPA_VER ?= 2.7.1
 REGISTRY_URL ?= 192.168.5.69:5000
 
 all: chk build
@@ -14,8 +15,9 @@ chk:
 .PHONY: build
 build: chk
 	docker build \
-		--build-arg TF_VER=${IMG_TAG} \
-		-t ${IMG_NAME} -f Dockerfile .
+		--build-arg TF_VER=$(IMG_TAG) \
+		--build-arg CAPA_VER=$(CAPA_VER) \
+		-t $(IMG_NAME) -f Dockerfile .
 
 .PHONY: run
 run:
