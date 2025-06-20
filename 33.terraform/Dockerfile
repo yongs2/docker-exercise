@@ -10,7 +10,7 @@ LABEL maintainer="yongs2@hotmail.com"
 RUN apk add --no-cache jq docker curl
 
 # for localstack
-RUN apk add --no-cache python3 py3-virtualenv make zip \
+RUN apk add --no-cache bash coreutils python3 py3-virtualenv make zip \
     && python3 -m venv /venv \
     && . /venv/bin/activate \
     && pip install --upgrade pip \
